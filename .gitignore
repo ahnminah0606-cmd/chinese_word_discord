@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+
+# Secrets
+chinese_word_discord.env
+chinese_word_discord_openai.env
+
+# Runtime state
+chinese_word_discord_history.json
+chinese_word_discord_history.tmp
