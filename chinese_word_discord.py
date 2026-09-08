@@ -64,9 +64,9 @@ def course_level(today: date) -> tuple[int, str]:
     level = min(4, week_number // 4 + 1)
     descriptions = {
         1: "아기 단계: 두 사람이 한 번씩 말한다. 각 중국어 발화는 되도록 2~8자로 매우 짧게 쓴다.",
-        2: "첫걸음 단계: 2~3번 주고받으며 시간·장소 표현을 하나까지 쓸 수 있다.",
-        3: "기초 단계: 3번 주고받으며 간단한 질문, 부탁 또는 이유를 포함할 수 있다.",
-        4: "생활 회화 단계: 3~4번 자연스럽게 주고받되 HSK 2~3 수준의 쉬운 어휘만 쓴다.",
+        2: "첫걸음 단계: 2번 주고받는다. 아주 쉬운 시간 또는 장소 표현을 하나까지 쓸 수 있다.",
+        3: "쉬운 기초 단계: 2~3번 주고받는다. 날씨·약속·식사·쇼핑·이동·기분 같은 일상 주제에서 짧은 질문이나 대답을 쓴다.",
+        4: "쉬운 생활 회화 단계: 2~3번만 주고받는다. 초보자가 바로 따라 말할 수 있는 짧은 일상 문장만 쓰고 각 발화는 되도록 15자를 넘기지 않는다.",
     }
     return level, descriptions[level]
 
@@ -90,7 +90,7 @@ def generate_dialogue(api_key: str, model: str, weekly: dict | None, used: list[
         "weekly_korean_pronunciation": {"type": "string"},
         "weekly_korean_meaning": {"type": "string"},
         "situation": {"type": "string"},
-        "lines": {"type": "array", "items": line_schema, "minItems": 2, "maxItems": 4},
+        "lines": {"type": "array", "items": line_schema, "minItems": 2, "maxItems": 3},
     }
     schema = {"type": "object", "properties": fields, "required": list(fields), "additionalProperties": False}
     if weekly:
@@ -101,6 +101,7 @@ def generate_dialogue(api_key: str, model: str, weekly: dict | None, used: list[
 난이도 규칙: {level_text}
 {weekly_rule}
 실제 일상에서 바로 쓸 수 있고 문법적으로 자연스러워야 한다. 병음에는 성조 기호를 넣고 한글식 발음은 한국인이 읽기 쉽게 쓴다.
+과정이 몇 달 진행되어도 어려운 어휘, 성어, 문어체, 격식체, 긴 문장, 복잡한 문법과 여러 절이 연결된 문장을 쓰지 않는다. 최종 목표는 '날씨가 정말 좋네요', '오늘은 친구랑 놀러 갈 거예요' 정도의 아주 쉬운 일상 회화다.
 같은 주의 핵심 회화 문장은 반복 학습을 위해 매일 다시 사용해도 된다. 하지만 아래에 기록된 과거 전체 대화와 동일한 대화 조합은 만들지 않는다:
 {json.dumps(used, ensure_ascii=False)}"""
     response = post_json(
