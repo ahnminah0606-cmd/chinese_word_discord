@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Generate a beginner Chinese sentence with OpenAI and post it to Discord."""
+"""Generate a progressive beginner Chinese mini-dialogue and post it to Discord."""
 
 import json
 import os
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -15,6 +15,7 @@ DISCORD_CONFIG = BASE_DIR / "chinese_word_discord.env"
 OPENAI_CONFIG = BASE_DIR / "chinese_word_discord_openai.env"
 HISTORY_PATH = BASE_DIR / "chinese_word_discord_history.json"
 TIMEZONE = ZoneInfo("Asia/Seoul")
+COURSE_START = date(2026, 9, 8)
 
 
 def read_env_file(path: Path) -> dict[str, str]:
@@ -32,7 +33,7 @@ def read_env_file(path: Path) -> dict[str, str]:
 
 def load_history() -> dict:
     if not HISTORY_PATH.exists():
-        return {"weekly_themes": {}, "sentences": []}
+        return {"course_start": COURSE_START.isoformat(), "weekly_conversations": {}, "dialogues": []}
     return json.loads(HISTORY_PATH.read_text(encoding="utf-8"))
 
 
@@ -58,31 +59,49 @@ def post_json(url: str, payload: dict, headers: dict[str, str]) -> dict:
     return json.loads(body) if body else {}
 
 
-def generate_lesson(api_key: str, model: str, theme: str | None, used: list[str]) -> dict:
-    fields = {
-        "theme_chinese": {"type": "string"},
-        "theme_pinyin": {"type": "string"},
-        "theme_korean": {"type": "string"},
-        "sentence_chinese": {"type": "string"},
-        "sentence_pinyin": {"type": "string"},
-        "sentence_korean_pronunciation": {"type": "string"},
-        "sentence_korean_meaning": {"type": "string"},
+def course_level(today: date) -> tuple[int, str]:
+    week_number = max(0, (today - COURSE_START).days // 7)
+    level = min(4, week_number // 4 + 1)
+    descriptions = {
+        1: "아기 단계: 두 사람이 한 번씩 말한다. 각 중국어 발화는 되도록 2~8자로 매우 짧게 쓴다.",
+        2: "첫걸음 단계: 2~3번 주고받으며 시간·장소 표현을 하나까지 쓸 수 있다.",
+        3: "기초 단계: 3번 주고받으며 간단한 질문, 부탁 또는 이유를 포함할 수 있다.",
+        4: "생활 회화 단계: 3~4번 자연스럽게 주고받되 HSK 2~3 수준의 쉬운 어휘만 쓴다.",
     }
-    schema = {
+    return level, descriptions[level]
+
+
+def generate_dialogue(api_key: str, model: str, weekly: dict | None, used: list[str], level_text: str) -> dict:
+    line_schema = {
         "type": "object",
-        "properties": fields,
-        "required": list(fields),
+        "properties": {
+            "speaker": {"type": "string", "enum": ["A", "B"]},
+            "chinese": {"type": "string"},
+            "pinyin": {"type": "string"},
+            "korean_pronunciation": {"type": "string"},
+            "korean_meaning": {"type": "string"},
+        },
+        "required": ["speaker", "chinese", "pinyin", "korean_pronunciation", "korean_meaning"],
         "additionalProperties": False,
     }
-    theme_instruction = (
-        f"이번 주 핵심 표현은 {theme}이다. 반드시 이 표현을 활용하라."
-        if theme
-        else "이번 주에 사용할 쉽고 실용적인 핵심 중국어 단어 또는 표현을 하나 새로 정하라."
-    )
-    prompt = f"""중국어와 한자를 전혀 모르는 한국인 초보자를 위한 오늘의 일상 문장 하나를 만든다.
-{theme_instruction}
-짧고 자연스러우며 실제 일상에서 쓸 수 있어야 한다. 병음에는 성조 기호를 표기하고 한글식 발음도 적는다.
-아래 과거 중국어 문장과 완전히 동일한 문장은 절대 만들지 않는다:
+    fields = {
+        "weekly_chinese": {"type": "string"},
+        "weekly_pinyin": {"type": "string"},
+        "weekly_korean_pronunciation": {"type": "string"},
+        "weekly_korean_meaning": {"type": "string"},
+        "situation": {"type": "string"},
+        "lines": {"type": "array", "items": line_schema, "minItems": 2, "maxItems": 4},
+    }
+    schema = {"type": "object", "properties": fields, "required": list(fields), "additionalProperties": False}
+    if weekly:
+        weekly_rule = f"이번 주 핵심 회화는 반드시 '{weekly['chinese']}'이다. 대화 발화 중 하나에 이 문장을 그대로 사용한다."
+    else:
+        weekly_rule = "이번 주에 매일 반복할 아주 쉬운 완성형 핵심 회화 문장을 하나 정하고 대화 발화 중 하나에 그대로 사용한다."
+    prompt = f"""중국어와 한자를 전혀 모르는 한국인 초보자의 하루치 미니 회화를 만든다.
+난이도 규칙: {level_text}
+{weekly_rule}
+실제 일상에서 바로 쓸 수 있고 문법적으로 자연스러워야 한다. 병음에는 성조 기호를 넣고 한글식 발음은 한국인이 읽기 쉽게 쓴다.
+같은 주의 핵심 회화 문장은 반복 학습을 위해 매일 다시 사용해도 된다. 하지만 아래에 기록된 과거 전체 대화와 동일한 대화 조합은 만들지 않는다:
 {json.dumps(used, ensure_ascii=False)}"""
     response = post_json(
         "https://api.openai.com/v1/responses",
@@ -90,10 +109,10 @@ def generate_lesson(api_key: str, model: str, theme: str | None, used: list[str]
             "model": model,
             "store": False,
             "input": [
-                {"role": "developer", "content": "요청된 JSON 스키마를 정확히 따르고 설명은 추가하지 않는다."},
+                {"role": "developer", "content": "교육 내용은 아주 쉽고 정확해야 하며 요청된 JSON 스키마만 출력한다."},
                 {"role": "user", "content": prompt},
             ],
-            "text": {"format": {"type": "json_schema", "name": "daily_chinese_lesson", "strict": True, "schema": schema}},
+            "text": {"format": {"type": "json_schema", "name": "daily_chinese_dialogue", "strict": True, "schema": schema}},
         },
         {"Authorization": f"Bearer {api_key}"},
     )
@@ -101,26 +120,42 @@ def generate_lesson(api_key: str, model: str, theme: str | None, used: list[str]
         for content in item.get("content", []):
             if content.get("type") == "output_text":
                 return json.loads(content["text"])
-    raise SystemExit("OpenAI response did not contain lesson text")
+    raise SystemExit("OpenAI response did not contain dialogue text")
 
 
-def format_message(lesson: dict) -> str:
-    return (
-        "🇨🇳 **오늘의 중국어**\n\n"
-        f"**{lesson['sentence_chinese']}**\n"
-        f"병음: {lesson['sentence_pinyin']}\n"
-        f"읽기: {lesson['sentence_korean_pronunciation']}\n"
-        f"뜻: {lesson['sentence_korean_meaning']}\n\n"
-        f"핵심 표현: **{lesson['theme_chinese']}** "
-        f"({lesson['theme_pinyin']}) — {lesson['theme_korean']}"
-    )
+def short_date(value: date) -> str:
+    return f"{value.month}/{value.day}"
+
+
+def format_message(dialogue: dict, monday: date) -> str:
+    sunday = monday + timedelta(days=6)
+    parts = [
+        "🇨🇳 **오늘의 중국어**",
+        "",
+        f"**이번 주 회화 ({short_date(monday)}~{short_date(sunday)})**",
+        f"**{dialogue['weekly_chinese']}**",
+        f"병음: {dialogue['weekly_pinyin']}",
+        f"읽기: {dialogue['weekly_korean_pronunciation']}",
+        f"뜻: {dialogue['weekly_korean_meaning']}",
+        "",
+        f"**오늘의 상황: {dialogue['situation']}**",
+    ]
+    for line in dialogue["lines"]:
+        parts.extend([
+            "",
+            f"👤 {line['speaker']}: **{line['chinese']}**",
+            f"병음: {line['pinyin']}",
+            f"읽기: {line['korean_pronunciation']}",
+            f"뜻: {line['korean_meaning']}",
+        ])
+    return "\n".join(parts)
 
 
 def send_discord(webhook_url: str, message: str) -> None:
     parsed = urllib.parse.urlparse(webhook_url)
     if parsed.scheme != "https" or parsed.hostname not in {"discord.com", "discordapp.com"}:
         raise SystemExit("The configured value is not a valid Discord webhook URL")
-    post_json(webhook_url, {"content": message}, {"User-Agent": "Chinese-Word-Discord/2.0"})
+    post_json(webhook_url, {"content": message}, {"User-Agent": "Chinese-Word-Discord/3.0"})
 
 
 def main() -> None:
@@ -129,16 +164,15 @@ def main() -> None:
     webhook_url = discord_env.get("DISCORD_WEBHOOK_URL", "")
     api_key = openai_env.get("OPENAI_API_KEY", "")
     model = openai_env.get("OPENAI_MODEL", "gpt-5-mini")
-    if not webhook_url:
-        raise SystemExit("DISCORD_WEBHOOK_URL is not set")
-    if not api_key:
-        raise SystemExit("OPENAI_API_KEY is not set")
+    if not webhook_url or not api_key:
+        raise SystemExit("DISCORD_WEBHOOK_URL or OPENAI_API_KEY is not set")
 
-    now = datetime.now(TIMEZONE)
-    date_key = now.date().isoformat()
-    monday_key = (now.date() - timedelta(days=now.weekday())).isoformat()
+    today = datetime.now(TIMEZONE).date()
+    date_key = today.isoformat()
+    monday = today - timedelta(days=today.weekday())
+    monday_key = monday.isoformat()
     history = load_history()
-    entries = history.setdefault("sentences", [])
+    entries = history.setdefault("dialogues", [])
     existing = next((entry for entry in entries if entry.get("date") == date_key), None)
     if existing and existing.get("sent"):
         return
@@ -148,28 +182,23 @@ def main() -> None:
         save_history(history)
         return
 
-    themes = history.setdefault("weekly_themes", {})
-    current_theme = themes.get(monday_key)
-    theme_text = current_theme.get("chinese") if isinstance(current_theme, dict) else current_theme
-    used = [entry.get("chinese", "") for entry in entries]
-    lesson = generate_lesson(api_key, model, theme_text, used)
-    if lesson["sentence_chinese"] in used:
-        raise SystemExit("OpenAI generated a duplicate sentence; nothing was sent")
+    weekly_conversations = history.setdefault("weekly_conversations", {})
+    weekly = weekly_conversations.get(monday_key)
+    level, level_text = course_level(today)
+    used = [entry.get("signature", "") for entry in entries]
+    dialogue = generate_dialogue(api_key, model, weekly, used, level_text)
+    signature = " | ".join(line["chinese"] for line in dialogue["lines"])
+    if signature in used:
+        raise SystemExit("OpenAI generated a duplicate dialogue; nothing was sent")
 
-    themes.setdefault(monday_key, {
-        "chinese": lesson["theme_chinese"],
-        "pinyin": lesson["theme_pinyin"],
-        "korean": lesson["theme_korean"],
+    weekly_conversations.setdefault(monday_key, {
+        "chinese": dialogue["weekly_chinese"],
+        "pinyin": dialogue["weekly_pinyin"],
+        "korean_pronunciation": dialogue["weekly_korean_pronunciation"],
+        "korean_meaning": dialogue["weekly_korean_meaning"],
     })
-    message = format_message(lesson)
-    entry = {
-        "date": date_key,
-        "week": monday_key,
-        "theme": lesson["theme_chinese"],
-        "chinese": lesson["sentence_chinese"],
-        "message": message,
-        "sent": False,
-    }
+    message = format_message(dialogue, monday)
+    entry = {"date": date_key, "week": monday_key, "level": level, "signature": signature, "message": message, "sent": False}
     entries.append(entry)
     save_history(history)
     send_discord(webhook_url, message)
