@@ -1,0 +1,44 @@
+name: Send daily Chinese sentence
+
+on:
+  schedule:
+    # 21:58 Asia/Seoul (UTC+9)
+    - cron: "58 12 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-chinese-discord
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure secrets
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          test -n "$DISCORD_WEBHOOK_URL"
+          test -n "$OPENAI_API_KEY"
+          printf 'DISCORD_WEBHOOK_URL=%s\n' "$DISCORD_WEBHOOK_URL" > chinese_word_discord.env
+          printf 'OPENAI_API_KEY=%s\nOPENAI_MODEL=gpt-5-mini\n' "$OPENAI_API_KEY" > chinese_word_discord_openai.env
+          chmod 600 chinese_word_discord.env chinese_word_discord_openai.env
+
+      - name: Generate and send lesson
+        run: python3 chinese_word_discord.py
+
+      - name: Save lesson history
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add chinese_word_discord_history.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Record daily Chinese lesson"
+          git push

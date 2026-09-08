@@ -5,6 +5,5 @@ __pycache__/
 chinese_word_discord.env
 chinese_word_discord_openai.env
 
-# Runtime state
-chinese_word_discord_history.json
+# Temporary runtime state
 chinese_word_discord_history.tmp

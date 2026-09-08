@@ -54,7 +54,18 @@ python3 chinese_word_discord.py
 
 성공하면 별도 출력 없이 종료합니다. 생성된 문장과 주간 주제는 `chinese_word_discord_history.json`에 저장됩니다.
 
-## 매일 자동 실행 예시
+## GitHub Actions 자동 실행
+
+저장소의 `Settings` → `Secrets and variables` → `Actions`에 다음 Repository Secret 두 개를 등록합니다.
+
+- `OPENAI_API_KEY`
+- `DISCORD_WEBHOOK_URL`
+
+포함된 워크플로는 매일 오후 9시 58분(한국 시간)에 실행됩니다. 실행 후 갱신된 `chinese_word_discord_history.json`을 저장소에 자동 커밋해, 다음 실행에서도 과거 문장의 중복을 검사할 수 있게 합니다.
+
+GitHub Actions의 예약 워크플로는 서버 상황에 따라 정각보다 조금 늦게 시작될 수 있습니다. `Actions` 탭의 `Send daily Chinese sentence`에서 `Run workflow`를 눌러 수동으로 시험할 수도 있습니다.
+
+## 로컬 자동 실행 예시
 
 한국 시간 기준 매일 오후 9시 58분에 실행하는 cron 예시입니다. `/absolute/path`는 실제 프로젝트 경로로 바꾸세요.
 
