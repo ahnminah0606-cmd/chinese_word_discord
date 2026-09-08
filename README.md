@@ -44,7 +44,7 @@ OPENAI_API_KEY=sk-...
 OPENAI_MODEL=gpt-5-mini
 ```
 
-실제 설정 파일과 전송 기록은 `.gitignore`에 포함되어 Git에 커밋되지 않습니다.
+실제 키가 들어 있는 설정 파일은 `.gitignore`에 포함되어 Git에 커밋되지 않습니다. 문장 중복 방지를 위한 `chinese_word_discord_history.json`에는 비밀값이 없으며, GitHub Actions 실행 간 기록을 이어가기 위해 저장소에 커밋됩니다.
 
 ## 실행
 
