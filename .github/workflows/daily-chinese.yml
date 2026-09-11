@@ -1,6 +1,8 @@
 name: Send daily Chinese sentence
 
 on:
+  push:
+    branches: [main]
   schedule:
     # Primary: 20:30 Asia/Seoul, backup: 21:30 Asia/Seoul (UTC+9)
     # The Python script prevents duplicate sends for the same KST date.
