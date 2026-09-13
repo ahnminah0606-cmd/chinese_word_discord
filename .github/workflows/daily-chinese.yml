@@ -2,9 +2,9 @@ name: Send daily Chinese sentence
 
 on:
   schedule:
-    # Primary: 20:30 Asia/Seoul, backup: 21:30 Asia/Seoul (UTC+9)
+    # Primary: 21:00 Asia/Seoul, backup: 21:30 Asia/Seoul (UTC+9)
     # The Python script prevents duplicate sends for the same KST date.
-    - cron: "30 11,12 * * *"
+    - cron: "0,30 12 * * *"
   workflow_dispatch:
 
 permissions:
