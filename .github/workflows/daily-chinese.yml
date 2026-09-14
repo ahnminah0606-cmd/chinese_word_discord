@@ -2,9 +2,11 @@ name: Send daily Chinese sentence
 
 on:
   schedule:
-    # Primary: 21:00 Asia/Seoul, backup: 21:30 Asia/Seoul (UTC+9)
+    # Primary: 20:55 Asia/Seoul, backups: 21:10 and 21:25 (UTC+9)
+    # Off-peak minutes reduce GitHub Actions schedule delays.
     # The Python script prevents duplicate sends for the same KST date.
-    - cron: "0,30 12 * * *"
+    - cron: "55 11 * * *"
+    - cron: "10,25 12 * * *"
   workflow_dispatch:
 
 permissions:
@@ -42,4 +44,5 @@ jobs:
           git add chinese_word_discord_history.json
           git diff --cached --quiet && exit 0
           git commit -m "Record daily Chinese lesson"
+          git pull --rebase origin main
           git push
