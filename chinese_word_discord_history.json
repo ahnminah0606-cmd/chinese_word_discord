@@ -6,6 +6,12 @@
       "pinyin": "Xièxie!",
       "korean_pronunciation": "시에시에!",
       "korean_meaning": "감사합니다!"
+    },
+    "2026-09-14": {
+      "chinese": "今天天气真好",
+      "pinyin": "jīntiān tiānqì zhēn hǎo",
+      "korean_pronunciation": "진티엔 티엔치 젠 하오",
+      "korean_meaning": "날씨가 정말 좋네요"
     }
   },
   "dialogues": [
@@ -55,6 +61,14 @@
       "level": 1,
       "signature": "这是礼物 | 谢谢！",
       "message": "🇨🇳 **오늘의 중국어**\n\n**이번 주 회화 (9/7~9/13)**\n**谢谢！**\n병음: xièxiè!\n읽기: 시에시예!\n뜻: 감사합니다!\n\n**오늘의 상황: 선물을 줄 때**\n\n👤 A: **这是礼物**\n병음: zhè shì lǐwù\n읽기: 저 스 리우\n뜻: 이건 선물이에요\n\n👤 B: **谢谢！**\n병음: xièxiè!\n읽기: 시에시예!\n뜻: 감사합니다!",
+      "sent": true
+    },
+    {
+      "date": "2026-09-16",
+      "week": "2026-09-14",
+      "level": 1,
+      "signature": "早上好 | 今天天气真好",
+      "message": "🇨🇳 **오늘의 중국어**\n\n**이번 주 회화 (9/14~9/20)**\n**今天天气真好**\n병음: jīntiān tiānqì zhēn hǎo\n읽기: 진티엔 티엔치 젠 하오\n뜻: 날씨가 정말 좋네요\n\n**오늘의 상황: 아침에 길에서 만난 인사**\n\n👤 A: **早上好**\n병음: zǎo shang hǎo\n읽기: 자오샹 하오\n뜻: 좋은 아침이에요\n\n👤 B: **今天天气真好**\n병음: jīntiān tiānqì zhēn hǎo\n읽기: 진티엔 티엔치 젠 하오\n뜻: 날씨가 정말 좋네요",
       "sent": true
     }
   ]
