@@ -178,7 +178,12 @@ def main() -> None:
     if not webhook_url or not api_key:
         raise SystemExit("DISCORD_WEBHOOK_URL or OPENAI_API_KEY is not set")
 
-    today = datetime.now(TIMEZONE).date()
+    target_date = os.environ.get("TARGET_DATE", "").strip()
+    force_resend = os.environ.get("FORCE_RESEND", "").strip() == "1"
+    try:
+        today = date.fromisoformat(target_date) if target_date else datetime.now(TIMEZONE).date()
+    except ValueError as error:
+        raise SystemExit(f"Invalid TARGET_DATE: {target_date}") from error
     date_key = today.isoformat()
     monday = today - timedelta(days=today.weekday())
     monday_key = monday.isoformat()
@@ -186,6 +191,8 @@ def main() -> None:
     entries = history.setdefault("dialogues", [])
     existing = next((entry for entry in entries if entry.get("date") == date_key), None)
     if existing and existing.get("sent"):
+        if force_resend:
+            send_discord(webhook_url, existing["message"])
         return
     if existing:
         send_discord(webhook_url, existing["message"])
