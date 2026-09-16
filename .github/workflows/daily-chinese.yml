@@ -2,11 +2,11 @@ name: Send daily Chinese sentence
 
 on:
   schedule:
-    # Primary: 20:55 Asia/Seoul, backups: 21:10 and 21:25 (UTC+9)
-    # Off-peak minutes reduce GitHub Actions schedule delays.
+    # Delivery window: 18:05-19:05 Asia/Seoul (UTC+9)
+    # Multiple off-peak checks reduce the impact of GitHub Actions delays.
     # The Python script prevents duplicate sends for the same KST date.
-    - cron: "55 11 * * *"
-    - cron: "10,25 12 * * *"
+    - cron: "5,25,45 9 * * *"
+    - cron: "5 10 * * *"
   workflow_dispatch:
 
 permissions:
