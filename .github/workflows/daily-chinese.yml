@@ -1,10 +1,12 @@
 name: Send daily Chinese sentence
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     # Delivery window: 18:05-19:05 Asia/Seoul (UTC+9)
     # Multiple off-peak checks reduce the impact of GitHub Actions delays.
-    # The Python script prevents duplicate sends for the same KST date.
     - cron: "5,25,45 9 * * *"
     - cron: "5 10 * * *"
   workflow_dispatch:
@@ -18,8 +20,9 @@ concurrency:
 
 jobs:
   send:
+    if: github.event_name != 'push' || github.event.head_commit.message == 'Trigger two-lesson backfill'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
@@ -34,7 +37,21 @@ jobs:
           printf 'OPENAI_API_KEY=%s\nOPENAI_MODEL=gpt-5-mini\n' "$OPENAI_API_KEY" > chinese_word_discord_openai.env
           chmod 600 chinese_word_discord.env chinese_word_discord_openai.env
 
-      - name: Generate and send lesson
+      - name: Send missing September 15 lesson
+        if: github.event_name == 'push'
+        env:
+          TARGET_DATE: "2026-09-15"
+        run: python3 chinese_word_discord.py
+
+      - name: Resend September 16 lesson
+        if: github.event_name == 'push'
+        env:
+          TARGET_DATE: "2026-09-16"
+          FORCE_RESEND: "1"
+        run: python3 chinese_word_discord.py
+
+      - name: Send regular daily lesson
+        if: github.event_name != 'push'
         run: python3 chinese_word_discord.py
 
       - name: Save lesson history
@@ -43,6 +60,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add chinese_word_discord_history.json
           git diff --cached --quiet && exit 0
-          git commit -m "Record daily Chinese lesson"
+          git commit -m "Record Chinese lesson history"
           git pull --rebase origin main
           git push
