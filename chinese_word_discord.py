@@ -181,6 +181,7 @@ def main() -> None:
 
     target_date = os.environ.get("TARGET_DATE", "").strip()
     force_resend = os.environ.get("FORCE_RESEND", "").strip() == "1"
+    regenerate = os.environ.get("REGENERATE", "").strip() == "1"
     try:
         today = date.fromisoformat(target_date) if target_date else datetime.now(TIMEZONE).date()
     except ValueError as error:
@@ -190,6 +191,8 @@ def main() -> None:
     monday_key = monday.isoformat()
     history = load_history()
     entries = history.setdefault("dialogues", [])
+    if regenerate:
+        entries[:] = [entry for entry in entries if entry.get("date") != date_key]
     existing = next((entry for entry in entries if entry.get("date") == date_key), None)
     if existing and existing.get("sent"):
         if force_resend:
@@ -204,10 +207,18 @@ def main() -> None:
     weekly_conversations = history.setdefault("weekly_conversations", {})
     weekly = weekly_conversations.get(monday_key)
     level, level_text = course_level(today)
-    used = [entry.get("signature", "") for entry in entries]
-    dialogue = generate_dialogue(api_key, model, weekly, used, level_text)
+    used_signatures = [entry.get("signature", "") for entry in entries]
+    past_dialogues = [
+        {
+            "date": entry.get("date", ""),
+            "signature": entry.get("signature", ""),
+            "message": entry.get("message", ""),
+        }
+        for entry in entries
+    ]
+    dialogue = generate_dialogue(api_key, model, weekly, past_dialogues, level_text)
     signature = " | ".join(line["chinese"] for line in dialogue["lines"])
-    if signature in used:
+    if signature in used_signatures:
         raise SystemExit("OpenAI generated a duplicate dialogue; nothing was sent")
 
     weekly_conversations.setdefault(monday_key, {
