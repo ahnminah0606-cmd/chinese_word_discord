@@ -12,6 +12,12 @@
       "pinyin": "jīntiān tiānqì zhēn hǎo",
       "korean_pronunciation": "진티엔 티엔치 젠 하오",
       "korean_meaning": "날씨가 정말 좋네요"
+    },
+    "2026-09-21": {
+      "chinese": "我去睡觉",
+      "pinyin": "wǒ qù shuìjiào",
+      "korean_pronunciation": "워 취 쉬에이자오",
+      "korean_meaning": "저 자러 갈게요"
     }
   },
   "dialogues": [
@@ -109,6 +115,14 @@
       "level": 1,
       "signature": "今天天气真好 | 一起吃饭吗",
       "message": "🇨🇳 **오늘의 중국어**\n\n**이번 주 회화 (9/14~9/20)**\n**今天天气真好**\n병음: jīntiān tiānqì zhēn hǎo\n읽기: 진티엔 티엔치 젠 하오\n뜻: 날씨가 정말 좋네요\n\n**오늘의 상황: 회사에서 동료에게 같이 점심 먹자고 물어볼 때**\n\n👤 A: **今天天气真好**\n병음: jīntiān tiānqì zhēn hǎo\n읽기: 진티엔 티엔치 젠 하오\n뜻: 날씨가 정말 좋네요\n\n👤 B: **一起吃饭吗**\n병음: yìqǐ chī fàn ma\n읽기: 이치치 츠판 마\n뜻: 같이 밥 먹을래요?",
+      "sent": true
+    },
+    {
+      "date": "2026-09-22",
+      "week": "2026-09-21",
+      "level": 1,
+      "signature": "我去睡觉 | 晚安",
+      "message": "🇨🇳 **오늘의 중국어**\n\n**이번 주 회화 (9/21~9/27)**\n**我去睡觉**\n병음: wǒ qù shuìjiào\n읽기: 워 취 쉬에이자오\n뜻: 저 자러 갈게요\n\n**오늘의 상황: 밤에 집에서 가족에게 자러 간다고 말할 때**\n\n👤 A: **我去睡觉**\n병음: wǒ qù shuìjiào\n읽기: 워 취 쉬에이자오\n뜻: 저 자러 갈게요\n\n👤 B: **晚安**\n병음: wǎn'ān\n읽기: 완안\n뜻: 안녕히 주무세요",
       "sent": true
     }
   ]
