@@ -180,13 +180,14 @@ def main() -> None:
         raise SystemExit("DISCORD_WEBHOOK_URL or OPENAI_API_KEY is not set")
 
     target_date = os.environ.get("TARGET_DATE", "").strip()
+    lesson_slot = os.environ.get("LESSON_SLOT", "").strip()
     force_resend = os.environ.get("FORCE_RESEND", "").strip() == "1"
     regenerate = os.environ.get("REGENERATE", "").strip() == "1"
     try:
         today = date.fromisoformat(target_date) if target_date else datetime.now(TIMEZONE).date()
     except ValueError as error:
         raise SystemExit(f"Invalid TARGET_DATE: {target_date}") from error
-    date_key = today.isoformat()
+    date_key = f"{today.isoformat()}-{lesson_slot}" if lesson_slot else today.isoformat()
     monday = today - timedelta(days=today.weekday())
     monday_key = monday.isoformat()
     history = load_history()
