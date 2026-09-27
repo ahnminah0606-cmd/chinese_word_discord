@@ -18,6 +18,12 @@
       "pinyin": "wǒ qù shuìjiào",
       "korean_pronunciation": "워 취 쉬에이자오",
       "korean_meaning": "저 자러 갈게요"
+    },
+    "2026-09-28": {
+      "chinese": "今天很忙",
+      "pinyin": "jīntiān hěn máng",
+      "korean_pronunciation": "진티엔 헌 망",
+      "korean_meaning": "오늘은 바빠요"
     }
   },
   "dialogues": [
@@ -179,6 +185,14 @@
       "level": 1,
       "signature": "现在几点？ | 六点了",
       "message": "🇨🇳 **오늘의 중국어**\n\n**이번 주 회화 (9/21~9/27)**\n**现在几点？**\n병음: xiànzài jǐ diǎn?\n읽기: 시앤짜이 지 디앤?\n뜻: 지금 몇 시예요?\n\n**오늘의 상황: 도서관에서 공부를 마치고 나가기 전에 시간을 물어볼 때**\n\n👤 A: **现在几点？**\n병음: xiànzài jǐ diǎn?\n읽기: 시앤짜이 지 디앤?\n뜻: 지금 몇 시예요?\n\n👤 B: **六点了**\n병음: liù diǎn le\n읽기: 리우 디앤 러\n뜻: 여섯 시예요",
+      "sent": true
+    },
+    {
+      "date": "2026-09-28",
+      "week": "2026-09-28",
+      "level": 1,
+      "signature": "改天好吗 | 今天很忙",
+      "message": "🇨🇳 **오늘의 중국어**\n\n**이번 주 회화 (9/28~10/4)**\n**今天很忙**\n병음: jīntiān hěn máng\n읽기: 진티엔 헌 망\n뜻: 오늘은 바빠요\n\n**오늘의 상황: 친구에게 약속을 다른 날로 바꾸고 싶을 때**\n\n👤 A: **改天好吗**\n병음: gǎi tiān hǎo ma\n읽기: 가이티엔 하오 마\n뜻: 다른 날 괜찮아요?\n\n👤 B: **今天很忙**\n병음: jīntiān hěn máng\n읽기: 진티엔 헌 망\n뜻: 오늘은 바빠요",
       "sent": true
     }
   ]
