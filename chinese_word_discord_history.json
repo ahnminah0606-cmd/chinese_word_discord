@@ -36,6 +36,12 @@
       "pinyin": "wǒ xǐ huān zhè ge",
       "korean_pronunciation": "워 시환 저거",
       "korean_meaning": "이거 좋아해요"
+    },
+    "2026-10-19": {
+      "chinese": "明天见",
+      "pinyin": "míngtiān jiàn",
+      "korean_pronunciation": "밍티엔 지엔",
+      "korean_meaning": "내일 봐요"
     }
   },
   "dialogues": [
@@ -365,6 +371,14 @@
       "level": 2,
       "signature": "这本书怎么样？ | 我喜欢这个",
       "message": "🇨🇳 **오늘의 중국어**\n\n**이번 주 회화 (10/12~10/18)**\n**我喜欢这个**\n병음: wǒ xǐ huān zhè ge\n읽기: 워 시환 저거\n뜻: 이거 좋아해요\n\n**오늘의 상황: 서점에서 친구에게 이 책이 어떤지 물어볼 때**\n\n👤 A: **这本书怎么样？**\n병음: zhè běn shū zěnme yàng?\n읽기: 저 번 슈 쩐머 양?\n뜻: 이 책 어때요?\n\n👤 B: **我喜欢这个**\n병음: wǒ xǐ huān zhè ge\n읽기: 워 시환 저거\n뜻: 이거 좋아해요",
+      "sent": true
+    },
+    {
+      "date": "2026-10-20",
+      "week": "2026-10-19",
+      "level": 2,
+      "signature": "明天中午见面可以吗？ | 明天见",
+      "message": "🇨🇳 **오늘의 중국어**\n\n**이번 주 회화 (10/19~10/25)**\n**明天见**\n병음: míngtiān jiàn\n읽기: 밍티엔 지엔\n뜻: 내일 봐요\n\n**오늘의 상황: 친구와 내일 점심 약속을 정할 때**\n\n👤 A: **明天中午见面可以吗？**\n병음: míngtiān zhōngwǔ jiànmiàn kěyǐ ma?\n읽기: 밍티엔 중우 지앤미앤 커이 마?\n뜻: 내일 점심에 만날까요?\n\n👤 B: **明天见**\n병음: míngtiān jiàn\n읽기: 밍티엔 지엔\n뜻: 내일 봐요",
       "sent": true
     }
   ]
