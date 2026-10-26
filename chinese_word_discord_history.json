@@ -42,6 +42,12 @@
       "pinyin": "míngtiān jiàn",
       "korean_pronunciation": "밍티엔 지엔",
       "korean_meaning": "내일 봐요"
+    },
+    "2026-10-26": {
+      "chinese": "我会说一点中文",
+      "pinyin": "wǒ huì shuō yìdiǎn zhōngwén",
+      "korean_pronunciation": "워 후이 슈어 이디엔 종원",
+      "korean_meaning": "저는 중국어를 조금 말할 수 있어요"
     }
   },
   "dialogues": [
@@ -419,6 +425,14 @@
       "level": 2,
       "signature": "我回家了 | 明天见",
       "message": "🇨🇳 **오늘의 중국어**\n\n**이번 주 회화 (10/19~10/25)**\n**明天见**\n병음: míngtiān jiàn\n읽기: 밍티엔 지엔\n뜻: 내일 봐요\n\n**오늘의 상황: 슈퍼마켓 계산대에서 쇼핑을 끝내고 친구에게 집에 간다고 말할 때**\n\n👤 A: **我回家了**\n병음: wǒ huí jiā le\n읽기: 워 후이 지아 러\n뜻: 저 집에 가요\n\n👤 B: **明天见**\n병음: míngtiān jiàn\n읽기: 밍티엔 지엔\n뜻: 내일 봐요",
+      "sent": true
+    },
+    {
+      "date": "2026-10-27",
+      "week": "2026-10-26",
+      "level": 2,
+      "signature": "我会说一点中文 | 真的吗？太好了！",
+      "message": "🇨🇳 **오늘의 중국어**\n\n**이번 주 회화 (10/26~11/1)**\n**我会说一点中文**\n병음: wǒ huì shuō yìdiǎn zhōngwén\n읽기: 워 후이 슈어 이디엔 종원\n뜻: 저는 중국어를 조금 말할 수 있어요\n\n**오늘의 상황: 지하철에서 옆 사람에게 자신이 중국어를 조금 할 수 있다고 말할 때**\n\n👤 A: **我会说一点中文**\n병음: wǒ huì shuō yìdiǎn zhōngwén\n읽기: 워 후이 슈어 이디엔 종원\n뜻: 저는 중국어를 조금 말할 수 있어요\n\n👤 B: **真的吗？太好了！**\n병음: zhēn de ma? tài hǎo le!\n읽기: 젠 더 마? 타이 하오 러!\n뜻: 정말요? 좋네요!",
       "sent": true
     }
   ]
